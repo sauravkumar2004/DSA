@@ -1,43 +1,45 @@
-
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
 class Solution {
 public:
     vector<int> nodesBetweenCriticalPoints(ListNode* head) {
-        if (!head || !head->next || !head->next->next) {
-            return {-1, -1}; 
-        }
-
-        ListNode* prev = head;
-        ListNode* curr = head->next;
-        ListNode* next = head->next->next;
-        int idx = 1;
-        int firstCritical = -1;
-        int lastCritical = -1;
-        int prevCriticalIdx = -1;
-        int minDistance = INT_MAX;
-
-        while (next) {
-            if ((curr->val > prev->val && curr->val > next->val) || 
-                (curr->val < prev->val && curr->val < next->val)) {
-                if (firstCritical == -1) {
-                    firstCritical = idx;
-                } else {
-                    minDistance = min(minDistance, idx - prevCriticalIdx);
+        ListNode* a=head;
+        ListNode* b=head->next;
+        ListNode* c=head->next->next;
+        int idx=1;
+        int first=-1;
+        int second=-1;
+        int f=-1;
+        int s=-1;
+        int mim=INT_MAX;
+        if(c==NULL) return {-1,-1};
+        while(c){
+            if(b->val > a->val && b->val > c->val || b->val < a->val && b->val < c->val){
+                if(first==-1) first=idx;
+                else second=idx;
+                f=s;
+                s=idx;
+                if(f!=-1){
+                    int d=s-f;
+                    mim=min(mim,d);
                 }
-                prevCriticalIdx = idx;
-                lastCritical = idx;
+
             }
-
-            prev = curr;
-            curr = next;
-            next = next->next;
+            a=a->next;
+            b=b->next;
+            c=c->next;
             idx++;
-        }
-
-        if (firstCritical == lastCritical) {
-            return {-1, -1}; 
-        }
-
-        int maxDistance = lastCritical - firstCritical;
-        return {minDistance, maxDistance};
+        } 
+        if(second==-1) return {-1,-1};
+        int max=second-first;
+        return {mim,max};
     }
 };
